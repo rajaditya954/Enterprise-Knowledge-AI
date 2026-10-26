@@ -1,0 +1,157 @@
+{
+  "description": "Golden evaluation dataset for Enterprise Knowledge AI. Each entry defines a test case with expected retrieval results and answer properties.",
+  "version": "1.0.0",
+  "entries": [
+    {
+      "id": "eval-001",
+      "question": "What is the company's remote work policy?",
+      "expectedDocuments": ["Remote_Work_Policy.pdf"],
+      "expectedPages": [1, 2],
+      "expectedAnswerContains": ["remote", "work", "policy"],
+      "userRole": "EMPLOYEE",
+      "userDepartment": "Engineering",
+      "shouldAnswer": true,
+      "permissionLevel": 1
+    },
+    {
+      "id": "eval-002",
+      "question": "What are the salary bands for senior engineers?",
+      "expectedDocuments": ["Compensation_Guide.pdf"],
+      "expectedPages": [3, 4],
+      "expectedAnswerContains": ["salary", "band", "senior"],
+      "userRole": "MANAGER",
+      "userDepartment": "Engineering",
+      "shouldAnswer": true,
+      "permissionLevel": 3
+    },
+    {
+      "id": "eval-003",
+      "question": "What is the annual revenue for 2025?",
+      "expectedDocuments": ["Financial_Report_2025.pdf"],
+      "expectedPages": [1],
+      "expectedAnswerContains": ["revenue"],
+      "userRole": "EMPLOYEE",
+      "userDepartment": "Engineering",
+      "shouldAnswer": false,
+      "permissionLevel": 4,
+      "refusalReason": "Restricted document — EMPLOYEE cannot access level 4"
+    },
+    {
+      "id": "eval-004",
+      "question": "How many vacation days do employees get?",
+      "expectedDocuments": ["Employee_Handbook.pdf"],
+      "expectedPages": [12, 13],
+      "expectedAnswerContains": ["vacation", "days"],
+      "userRole": "EMPLOYEE",
+      "userDepartment": "Human Resources",
+      "shouldAnswer": true,
+      "permissionLevel": 1
+    },
+    {
+      "id": "eval-005",
+      "question": "What is the recipe for chocolate cake?",
+      "expectedDocuments": [],
+      "expectedPages": [],
+      "expectedAnswerContains": [],
+      "userRole": "EMPLOYEE",
+      "userDepartment": "Engineering",
+      "shouldAnswer": false,
+      "refusalReason": "Out-of-scope question — no relevant documents"
+    },
+    {
+      "id": "eval-006",
+      "question": "What is the hiring process for the legal department?",
+      "expectedDocuments": ["Legal_Hiring_Process.docx"],
+      "expectedPages": [1, 2, 3],
+      "expectedAnswerContains": ["hiring", "interview"],
+      "userRole": "MANAGER",
+      "userDepartment": "Legal",
+      "shouldAnswer": true,
+      "permissionLevel": 2
+    },
+    {
+      "id": "eval-007",
+      "question": "Describe the data breach incident response plan.",
+      "expectedDocuments": ["Incident_Response_Plan.pdf"],
+      "expectedPages": [1, 2, 3, 4],
+      "expectedAnswerContains": ["incident", "response", "breach"],
+      "userRole": "EMPLOYEE",
+      "userDepartment": "Engineering",
+      "shouldAnswer": false,
+      "permissionLevel": 3,
+      "refusalReason": "Confidential document — EMPLOYEE cannot access level 3 in another department"
+    },
+    {
+      "id": "eval-008",
+      "question": "What are the quarterly OKR guidelines?",
+      "expectedDocuments": ["OKR_Framework.md"],
+      "expectedPages": [1],
+      "expectedAnswerContains": ["OKR", "objectives", "key results"],
+      "userRole": "EMPLOYEE",
+      "userDepartment": "Engineering",
+      "shouldAnswer": true,
+      "permissionLevel": 1
+    },
+    {
+      "id": "eval-009",
+      "question": "What are the executive board meeting notes from Q3?",
+      "expectedDocuments": ["Board_Meeting_Q3.pdf"],
+      "expectedPages": [1, 2],
+      "expectedAnswerContains": ["board", "meeting"],
+      "userRole": "MANAGER",
+      "userDepartment": "Finance",
+      "shouldAnswer": false,
+      "permissionLevel": 4,
+      "refusalReason": "Restricted document — only ADMIN can access level 4"
+    },
+    {
+      "id": "eval-010",
+      "question": "What health insurance options are available?",
+      "expectedDocuments": ["Benefits_Overview.pdf"],
+      "expectedPages": [5, 6, 7],
+      "expectedAnswerContains": ["health", "insurance", "plan"],
+      "userRole": "EMPLOYEE",
+      "userDepartment": "Human Resources",
+      "shouldAnswer": true,
+      "permissionLevel": 1
+    }
+  ],
+  "accessControlTests": [
+    {
+      "id": "acl-001",
+      "description": "EMPLOYEE cannot retrieve Restricted (level 4) documents from any department",
+      "userRole": "EMPLOYEE",
+      "userDepartment": "Engineering",
+      "restrictedDocDepartment": "Finance",
+      "restrictedPermissionLevel": 4,
+      "expectedChunksReturned": 0
+    },
+    {
+      "id": "acl-002",
+      "description": "EMPLOYEE cannot retrieve Confidential (level 3) from other departments",
+      "userRole": "EMPLOYEE",
+      "userDepartment": "Engineering",
+      "restrictedDocDepartment": "Human Resources",
+      "restrictedPermissionLevel": 3,
+      "expectedChunksReturned": 0
+    },
+    {
+      "id": "acl-003",
+      "description": "MANAGER cannot retrieve Restricted (level 4) from own department",
+      "userRole": "MANAGER",
+      "userDepartment": "Finance",
+      "restrictedDocDepartment": "Finance",
+      "restrictedPermissionLevel": 4,
+      "expectedChunksReturned": 0
+    },
+    {
+      "id": "acl-004",
+      "description": "MANAGER cannot retrieve Confidential (level 3) from other departments",
+      "userRole": "MANAGER",
+      "userDepartment": "Engineering",
+      "restrictedDocDepartment": "Legal",
+      "restrictedPermissionLevel": 3,
+      "expectedChunksReturned": 0
+    }
+  ]
+}
